@@ -1,5 +1,5 @@
-require "openssl" 
-require "json"
+require "openssl"
+require "colorize"
 
 require "./block"
 
@@ -31,8 +31,6 @@ class BlockChain
     )
 
     nonce, hash = pow.do_proof_of_work
-    nonce = nonce.to_i
-    hash = hash.to_s
 
     block = Block.new(
       hash: hash,
@@ -46,13 +44,13 @@ class BlockChain
 
   def is_valid_new_block?(new_block, previous_block)
     if previous_block.height + 1 != new_block.height
-      puts "invalid height"
+      puts "invalid height".colorize(:red)
       return false
     elsif previous_block.hash != new_block.previous_hash
-      puts "invalid hash: previous hash"
+      puts "invalid hash: previous hash".colorize(:red)
       return false
     elsif calculate_hash_for_block(new_block) != new_block.hash
-      puts "invalid hash: hash"
+      puts "invalid hash: hash".colorize(:red)
       puts calculate_hash_for_block(new_block)
       puts new_block.hash
       return false
@@ -60,7 +58,6 @@ class BlockChain
     true
   end
 
-  # 作ったブロックをチェーンに追加する
   def add_block(new_block)
     @blocks << new_block if is_valid_new_block?(new_block, last_block)
   end
@@ -84,16 +81,13 @@ class BlockChain
   end
 
   def self.is_valid_chain?(block_chain_to_validate)
-    # Genesis block の確認
-    unless block_chain_to_validate.blocks[0] == BlockChain.get_genesis_block
-      puts "genesis block error".colorize(:red)
+    if block_chain_to_validate.blocks[0] != BlockChain.get_genesis_block
+      puts "genesis block is different".colorize(:red)
       return false
     end
-    tmp_blocks = [block_chain_to_validate.blocks[0]]
-    block_chain_to_validate.blocks[1..-1].each.with_index(1) do |block, i|
-      if block_chain_to_validate.is_valid_new_block?(block, tmp_blocks[i - 1])
-        tmp_blocks << block
-      else
+    block_chain_to_validate.blocks.each_cons(2) do | blocks |
+      prev_block, block = blocks
+      if !block_chain_to_validate.is_valid_new_block?(block, prev_block)
         return false
       end
     end

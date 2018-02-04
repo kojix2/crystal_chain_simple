@@ -29,7 +29,7 @@ class ProofOfWork
     loop do
       hash = calc_hash_with_nonce nonce
       if hash.starts_with? difficulty
-        return [nonce, hash]
+        return {nonce, hash}
       else
         nonce += 1
       end

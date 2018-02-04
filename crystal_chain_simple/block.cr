@@ -20,7 +20,6 @@ class Block
 
   def_equals
 
-  # ジェネシス・ブロックを作成する
   def self.create_genesis_block
     timestamp = Time.new(2009,1,3).epoch
     previous_hash = "0"
@@ -31,10 +30,8 @@ class Block
       transactions: transactions,
       previous_hash: previous_hash
     )
-
     nonce, hash = pow.do_proof_of_work
-    nonce = nonce.to_i
-    hash = hash.to_s
+
     Block.new(
       hash: hash,
       height: 0,
