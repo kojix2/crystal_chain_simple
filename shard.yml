@@ -1,0 +1,13 @@
+name: ruby_chain
+version: 0.1.0
+
+ authors:
+   - name <email@example.com>
+
+description: |
+  Short description of ruby_chain
+
+dependencies:
+#  pg:
+#    github: will/crystal-pg
+#    version: "~> 0.5"
