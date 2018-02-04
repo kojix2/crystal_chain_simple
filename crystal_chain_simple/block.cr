@@ -16,25 +16,9 @@ class Block
     @previous_hash = previous_hash
   end
 
-  def ==(other : Block)
-    self.hash == other.hash &&
-      self.height == other.height &&
-      self.transactions == other.transactions &&
-      self.timestamp == other.timestamp &&
-      self.nonce == other.nonce &&
-      self.previous_hash == other.previous_hash
-  end
+  def_clone 
 
-  def clone
-    Block.new(
-      hash: self.hash.clone,
-      height: self.height.clone,
-      transactions: self.transactions.clone,
-      timestamp: self.timestamp.clone,
-      nonce: self.nonce.clone,
-      previous_hash: self.previous_hash.clone
-    )
-  end
+  def_equals
 
   # ジェネシス・ブロックを作成する
   def self.create_genesis_block

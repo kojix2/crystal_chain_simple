@@ -69,10 +69,7 @@ class BlockChain
     @blocks.size
   end
 
-  def clone
-    blocks_copy = self.blocks.clone
-    BlockChain.new(blocks_copy)
-  end
+  def_clone
 
   private def calculate_hash_for_block(block)
     hash = OpenSSL::Digest.new("SHA256")
