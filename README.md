@@ -1,4 +1,2 @@
-ruby_chain
+crystal_chain_simple
 ===
-
-ruby_chain is a bitcoin-like blockchain implemented with ruby to understand its architecture.
