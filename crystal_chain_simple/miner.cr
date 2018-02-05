@@ -4,17 +4,17 @@ require "colorize"
 require "./block_chain"
 
 class Miner
-  getter :name, :block_chain
+  getter :name, :chain
   def initialize(@name : String)
-    @block_chain = BlockChain.new
+    @chain = BlockChain.new
   end
 
-  def accept(receive_block_chain)
-    puts "#{@name} checks received block chain. Size: #{@block_chain.size}"
-    if receive_block_chain.size > @block_chain.size
-      if BlockChain.is_valid? receive_block_chain
+  def accept(chain)
+    puts "#{@name} checks received block chain. Size: #{@chain.size}"
+    if chain.size > @chain.size
+      if BlockChain.is_valid? chain
         puts "#{@name} accepted received blockchain".colorize(:blue)
-        @block_chain = receive_block_chain.clone
+        @chain = chain.clone
       else
         puts "Received blockchain invalid"
       end
@@ -22,8 +22,8 @@ class Miner
   end
 
   def add_new_block(content)
-    next_block = @block_chain.next_block(content)
-    @block_chain.add_block(next_block)
+    next_block = @chain.next_block(content)
+    @chain.add(next_block)
     puts "#{@name} add new block: #{next_block.hash}"
   end
 end

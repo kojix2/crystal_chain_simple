@@ -43,7 +43,7 @@ class BlockChain
     )
   end
 
-  def add_block(block)
+  def add(block)
     @blocks << block if BlockChain.check_block(block, last)
   end
 
