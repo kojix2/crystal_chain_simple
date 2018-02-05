@@ -15,24 +15,23 @@ class ProofOfWork
 
   def calc_hash_with_nonce(nonce)
     s = {
-      timestamp: @timestamp,
-      content: @content,
-      previous_hash: @previous_hash,
-      nonce: nonce
+      timestamp:      @timestamp,
+      content:        @content,
+      previous_hash:  @previous_hash,
+      nonce:          nonce
     }.to_json
     sha256(s)
   end
 
   def do_proof_of_work(difficulty = "0000")
     nonce = 0
+    hash = calc_hash_with_nonce(nonce)
 
-    loop do
-      hash = calc_hash_with_nonce nonce
-      if hash.starts_with? difficulty
-        return {nonce, hash}
-      else
-        nonce += 1
-      end
+    until hash.starts_with? difficulty
+      nonce += 1
+      hash = calc_hash_with_nonce(nonce)
     end
+
+    return {nonce, hash}
   end
 end
