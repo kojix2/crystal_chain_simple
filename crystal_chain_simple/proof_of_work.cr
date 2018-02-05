@@ -1,7 +1,10 @@
 require "openssl"
 require "json"
 
+require "./utils"
+
 class ProofOfWork
+  include Hashes 
   getter :timestamp, :content, :previous_hash
 
   def initialize(
@@ -11,18 +14,15 @@ class ProofOfWork
   end
 
   def calc_hash_with_nonce(nonce)
-    hash = OpenSSL::Digest.new("SHA256")
     s = {
       timestamp: @timestamp,
       content: @content,
       previous_hash: @previous_hash,
       nonce: nonce
     }.inspect
-    hash.update(s)
-    hash.hexdigest
+    sha256(s)
   end
 
-  # TODO: difficulty
   def do_proof_of_work(difficulty = "0000")
     nonce = 0
 

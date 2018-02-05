@@ -2,8 +2,10 @@ require "openssl"
 require "colorize"
 
 require "./block"
+require "./utils"
 
 class BlockChain
+  include Hashes 
   getter :blocks
 
   def initialize(@blocks : Array(Block))
@@ -48,9 +50,9 @@ class BlockChain
     elsif previous_block.hash != new_block.previous_hash
       puts "invalid hash: previous hash".colorize(:red)
       return false
-    elsif calculate_hash_for_block(new_block) != new_block.hash
+    elsif hash_of(new_block) != new_block.hash
       puts "invalid hash: hash".colorize(:red)
-      puts calculate_hash_for_block(new_block)
+      puts hash_of(new_block)
       puts new_block.hash
       return false
     end
@@ -67,16 +69,14 @@ class BlockChain
 
   def_clone
 
-  private def calculate_hash_for_block(block)
-    hash = OpenSSL::Digest.new("SHA256")
+  private def hash_of(block)
     str = {
       timestamp: block.timestamp,
       content: block.content,
       previous_hash: block.previous_hash,
       nonce: block.nonce
     }.inspect
-    hash.update(str)
-    hash.hexdigest
+    sha256(str)
   end
 
   def self.is_valid_chain?(block_chain_to_validate)
