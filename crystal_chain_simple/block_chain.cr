@@ -5,7 +5,7 @@ require "./block"
 require "./utils"
 
 class BlockChain
-  include Hashes 
+  extend Hashes 
   getter :blocks
 
   def initialize(@blocks : Array(Block))
@@ -43,24 +43,8 @@ class BlockChain
     )
   end
 
-  def is_valid_new_block?(new_block, previous_block)
-    if previous_block.index + 1 != new_block.index
-      puts "invalid index".colorize(:red)
-      return false
-    elsif previous_block.hash != new_block.previous_hash
-      puts "invalid hash: previous hash".colorize(:red)
-      return false
-    elsif hash_of(new_block) != new_block.hash
-      puts "invalid hash: hash".colorize(:red)
-      puts hash_of(new_block)
-      puts new_block.hash
-      return false
-    end
-    true
-  end
-
   def add_block(new_block)
-    @blocks << new_block if is_valid_new_block?(new_block, last_block)
+    @blocks << new_block if BlockChain.check_block(new_block, last_block)
   end
 
   def size
@@ -69,7 +53,7 @@ class BlockChain
 
   def_clone
 
-  private def hash_of(block)
+  def self.hash_of(block)
     str = {
       timestamp: block.timestamp,
       content: block.content,
@@ -79,14 +63,31 @@ class BlockChain
     sha256(str)
   end
 
-  def self.is_valid_chain?(block_chain_to_validate)
-    if block_chain_to_validate.blocks[0] != BlockChain.get_genesis_block
+  def self.check_block(block, prev_block)
+    if block.index != prev_block.index + 1
+      puts "invalid index".colorize(:red) 
+      false
+    elsif block.previous_hash != prev_block.hash
+      puts "invalid hash: previous hash".colorize(:red)
+      false
+    elsif block.hash != hash_of(block)
+      puts "invalid hash: hash".colorize(:red)
+      puts hash_of(block).colorize(:red)
+      puts block.hash.colorize(:red)
+      false
+    else
+      true
+    end
+  end
+
+  def self.is_valid?(chain)
+    if chain.blocks[0] != BlockChain.get_genesis_block
       puts "genesis block is different".colorize(:red)
       return false
     end
-    block_chain_to_validate.blocks.each_cons(2) do | blocks |
+    chain.blocks.each_cons(2) do | blocks |
       prev_block, block = blocks
-      if !block_chain_to_validate.is_valid_new_block?(block, prev_block)
+      if !BlockChain.check_block(block, prev_block)
         return false
       end
     end
@@ -94,6 +95,6 @@ class BlockChain
   end
 
   def self.get_genesis_block
-    Block.create_genesis_block
+    Block.genesis
   end
 end

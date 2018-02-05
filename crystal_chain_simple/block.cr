@@ -30,7 +30,7 @@ class Block
 
   def_equals
 
-  def self.create_genesis_block
+  def self.genesis
     timestamp = Time.new(2009,1,3).epoch
     previous_hash = "0"
     content = "Hello I'm fine."

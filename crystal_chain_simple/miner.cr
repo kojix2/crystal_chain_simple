@@ -12,7 +12,7 @@ class Miner
   def accept(receive_block_chain)
     puts "#{@name} checks received block chain. Size: #{@block_chain.size}"
     if receive_block_chain.size > @block_chain.size
-      if BlockChain.is_valid_chain? receive_block_chain
+      if BlockChain.is_valid? receive_block_chain
         puts "#{@name} accepted received blockchain".colorize(:blue)
         @block_chain = receive_block_chain.clone
       else
