@@ -2,11 +2,11 @@ require "openssl"
 require "json"
 
 class ProofOfWork
-  getter :timestamp, :transactions, :previous_hash
+  getter :timestamp, :content, :previous_hash
 
   def initialize(
     @timestamp : Int64,
-    @transactions : String,
+    @content : String,
     @previous_hash : String)
   end
 
@@ -14,7 +14,7 @@ class ProofOfWork
     hash = OpenSSL::Digest.new("SHA256")
     s = {
       timestamp: @timestamp,
-      transactions: @transactions,
+      content: @content,
       previous_hash: @previous_hash,
       nonce: nonce
     }.inspect

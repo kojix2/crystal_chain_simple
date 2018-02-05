@@ -42,13 +42,11 @@ class Hoge
     puts "block chain result"
 
     @@receive_block_chain.blocks.each do |block|
-      puts "*** Block #{block.height} ***"
+      puts "*** Block #{block.index} ***"
       puts "hash: #{block.hash}"
       puts "previous_hash: #{block.previous_hash}"
       puts "timestamp: #{block.timestamp}"
-      # TODO: merkle root
-      # puts "transactions_hash: #{block.transactions_hash}"
-      puts "transactions: #{block.transactions}"
+      puts "transactions: #{block.content}"
       puts "nonce: #{block.nonce}"
       puts ""
     end

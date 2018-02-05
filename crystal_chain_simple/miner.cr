@@ -21,8 +21,8 @@ class Miner
     end
   end
 
-  def add_new_block(transaction)
-    next_block = @block_chain.next_block(transaction)
+  def add_new_block(content)
+    next_block = @block_chain.next_block(content)
     @block_chain.add_block(next_block)
     puts "#{@name} add new block: #{next_block.hash}"
   end

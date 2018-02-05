@@ -18,23 +18,23 @@ class BlockChain
     @blocks.last
   end
 
-  def next_block(transactions)
-    height = last_block.height + 1
+  def next_block(content)
+    index = last_block.index + 1
     timestamp = Time.now.epoch
     previous_hash = last_block.hash
 
     pow = ProofOfWork.new(
       timestamp: timestamp,
       previous_hash: previous_hash,
-      transactions: transactions
+      content: content
     )
 
     nonce, hash = pow.do_proof_of_work
 
     block = Block.new(
       hash: hash,
-      height: height,
-      transactions: transactions,
+      index: index,
+      content: content,
       timestamp: timestamp,
       nonce: nonce,
       previous_hash: previous_hash
@@ -42,8 +42,8 @@ class BlockChain
   end
 
   def is_valid_new_block?(new_block, previous_block)
-    if previous_block.height + 1 != new_block.height
-      puts "invalid height".colorize(:red)
+    if previous_block.index + 1 != new_block.index
+      puts "invalid index".colorize(:red)
       return false
     elsif previous_block.hash != new_block.previous_hash
       puts "invalid hash: previous hash".colorize(:red)
@@ -71,7 +71,7 @@ class BlockChain
     hash = OpenSSL::Digest.new("SHA256")
     str = {
       timestamp: block.timestamp,
-      transactions: block.transactions,
+      content: block.content,
       previous_hash: block.previous_hash,
       nonce: block.nonce
     }.inspect
