@@ -24,6 +24,6 @@ class Miner
   def add_new_block(content)
     next_block = @chain.next_block(content)
     @chain.add(next_block)
-    puts "#{@name} add new block: #{next_block.hash}"
+    puts "#{@name} add new block: #{next_block.hash}".colorize(:green)
   end
 end
