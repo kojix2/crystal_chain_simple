@@ -6,8 +6,7 @@ require "./block"
 class BlockChain
   getter :blocks
 
-  def initialize(blocks : Array(Block))
-    @blocks = blocks
+  def initialize(@blocks : Array(Block))
   end
 
   def initialize

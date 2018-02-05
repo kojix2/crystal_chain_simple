@@ -5,8 +5,7 @@ require "./block_chain"
 
 class Miner
   getter :name, :block_chain
-  def initialize(name : String)
-    @name = name
+  def initialize(@name : String)
     @block_chain = BlockChain.new
   end
 

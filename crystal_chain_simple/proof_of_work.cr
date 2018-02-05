@@ -4,10 +4,10 @@ require "json"
 class ProofOfWork
   getter :timestamp, :transactions, :previous_hash
 
-  def initialize(timestamp : Int64, transactions : String, previous_hash : String)
-    @timestamp = timestamp
-    @transactions = transactions
-    @previous_hash = previous_hash
+  def initialize(
+    @timestamp : Int64,
+    @transactions : String,
+    @previous_hash : String)
   end
 
   def calc_hash_with_nonce(nonce)

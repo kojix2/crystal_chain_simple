@@ -6,14 +6,14 @@ require "./proof_of_work"
 class Block
   getter :hash, :height, :transactions, :timestamp, :nonce, :previous_hash
 
-  def initialize(hash : String, height : Int32, transactions : String, timestamp : Int64, nonce : Int32, previous_hash : String)
-    @hash = hash
-    @height = height
-    # TODO: merkle root
-    @transactions = transactions
-    @timestamp = timestamp
-    @nonce = nonce
-    @previous_hash = previous_hash
+  def initialize(
+    @hash : String,
+    @height : Int32,
+    @transactions : String,
+    @timestamp : Int64,
+    @nonce : Int32,
+    @previous_hash : String
+  )
   end
 
   def_clone 
