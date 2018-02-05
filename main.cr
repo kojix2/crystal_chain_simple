@@ -1,8 +1,11 @@
 require "colorize"
+require "option_parser"
 require "./crystal_chain_simple/block_chain"
 require "./crystal_chain_simple/miner"
 
-class Hoge
+class Main
+  @n : String?
+  @e : String?
 
   ## blockchain simulator
   @@receive_block_chain = BlockChain.new
@@ -10,8 +13,9 @@ class Hoge
   def create_miner(name, channel)
     spawn do
       miner = Miner.new name: name
-      10.times do
-        sleep [1, 2, 3].sample
+      epoch = (@e || 10).to_i
+      epoch.times do
+        sleep [1, 2, 3].sample 
         miner.accept @@receive_block_chain
         miner.add_new_block("I am #{name}")
         broadcast miner
@@ -26,16 +30,24 @@ class Hoge
   end
 
   def initialize
+    args = parse_options
+  end
 
+  private def parse_options
+    OptionParser.parse! do |parser|
+      parser.on("-m NUM", "--miner=NUM", "number of miner") { |n|  @n = n }
+      parser.on("-e NUM", "--epoch", "") { |e| @e = e }
+    end
   end
 
   def run
     puts "start"
     ch = Channel(String).new
-    th1 = create_miner name: "miner1", channel: ch
-    th2 = create_miner name: "miner2", channel: ch
-    th3 = create_miner name: "miner3", channel: ch
-    3.times do 
+    n = (@n || 3).to_i
+    n.times do |i|
+      create_miner name: "mineri#{i+1}", channel: ch
+    end
+    n.times do 
       puts ch.receive + " end"
     end
 
@@ -54,4 +66,4 @@ class Hoge
 
 end
 
-Hoge.new.run
+Main.new.run
