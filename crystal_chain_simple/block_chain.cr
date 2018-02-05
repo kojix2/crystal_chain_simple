@@ -13,17 +13,17 @@ class BlockChain
 
   def initialize
     @blocks = [] of Block 
-    @blocks << BlockChain.get_genesis_block
+    @blocks << Block.genesis
   end
 
-  def last_block
-    @blocks.last
-  end
+  delegate first,to: @blocks
+  delegate last, to: @blocks
+  delegate size, to: @blocks
 
   def next_block(content)
-    index = last_block.index + 1
+    index = last.index + 1
     timestamp = Time.now.epoch
-    previous_hash = last_block.hash
+    previous_hash = last.hash
 
     pow = ProofOfWork.new(
       timestamp: timestamp,
@@ -43,24 +43,20 @@ class BlockChain
     )
   end
 
-  def add_block(new_block)
-    @blocks << new_block if BlockChain.check_block(new_block, last_block)
-  end
-
-  def size
-    @blocks.size
+  def add_block(block)
+    @blocks << block if BlockChain.check_block(block, last)
   end
 
   def_clone
 
   def self.hash_of(block)
     str = {
-      timestamp: block.timestamp,
-      content: block.content,
-      previous_hash: block.previous_hash,
-      nonce: block.nonce
-    }.to_json
-    sha256(str)
+      timestamp:      block.timestamp,
+      content:        block.content,
+      previous_hash:  block.previous_hash,
+      nonce:          block.nonce
+    }
+    sha256(str.to_json)
   end
 
   def self.check_block(block, prev_block)
@@ -81,7 +77,7 @@ class BlockChain
   end
 
   def self.is_valid?(chain)
-    if chain.blocks[0] != BlockChain.get_genesis_block
+    if chain.first != Block.genesis
       puts "genesis block is different".colorize(:red)
       return false
     end
@@ -92,9 +88,5 @@ class BlockChain
       end
     end
     true
-  end
-
-  def self.get_genesis_block
-    Block.genesis
   end
 end
