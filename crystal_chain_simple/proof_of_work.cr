@@ -19,7 +19,7 @@ class ProofOfWork
       content: @content,
       previous_hash: @previous_hash,
       nonce: nonce
-    }.inspect
+    }.to_json
     sha256(s)
   end
 

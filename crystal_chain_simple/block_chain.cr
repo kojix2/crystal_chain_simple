@@ -75,7 +75,7 @@ class BlockChain
       content: block.content,
       previous_hash: block.previous_hash,
       nonce: block.nonce
-    }.inspect
+    }.to_json
     sha256(str)
   end
 
