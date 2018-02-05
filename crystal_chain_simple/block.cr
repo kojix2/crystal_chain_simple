@@ -1,19 +1,9 @@
 require "openssl" 
 require "time"
-require "json"
 
 require "./proof_of_work"
 
 class Block
-  JSON.mapping({
-    hash: String,
-    index: Int32,
-    content: String,
-    timestamp: Int64,
-    nonce: Int32,
-    previous_hash: String,
-  })
-
   getter :hash, :index, :content, :timestamp, :nonce, :previous_hash
 
   def initialize(
