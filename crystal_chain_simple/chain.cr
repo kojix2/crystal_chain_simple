@@ -4,7 +4,7 @@ require "colorize"
 require "./block"
 require "./utils"
 
-class BlockChain
+class Chain
   extend Hashes 
   getter :blocks
 
@@ -44,7 +44,7 @@ class BlockChain
   end
 
   def add(block)
-    @blocks << block if BlockChain.check_block(block, last)
+    @blocks << block if Chain.check_block(block, last)
   end
 
   def_clone
@@ -83,7 +83,7 @@ class BlockChain
     end
     chain.blocks.each_cons(2) do | blocks |
       prev_block, block = blocks
-      if !BlockChain.check_block(block, prev_block)
+      if !Chain.check_block(block, prev_block)
         return false
       end
     end

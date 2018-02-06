@@ -1,6 +1,6 @@
 require "colorize"
 require "option_parser"
-require "./crystal_chain_simple/block_chain"
+require "./crystal_chain_simple/chain"
 require "./crystal_chain_simple/miner"
 
 class Main
@@ -8,7 +8,7 @@ class Main
   @e : String?
 
   ## blockchain simulator
-  @@receive_block_chain = BlockChain.new
+  @@receive_block_chain = Chain.new
 
   def create_miner(name, channel)
     spawn do
@@ -26,7 +26,7 @@ class Main
 
   def broadcast(miner)
     puts "#{miner.name} broadcasted"
-    @@receive_block_chain = miner.block_chain
+    @@receive_block_chain = miner.chain
   end
 
   def initialize
@@ -54,11 +54,10 @@ class Main
     puts "block chain result"
 
     @@receive_block_chain.blocks.each do |block|
-      puts "*** Block #{block.index} ***"
+      puts "*** Block #{block.index} ***".colorize.fore(:black).back(:white)
       puts "hash: #{block.hash}"
-      puts "previous_hash: #{block.previous_hash}"
       puts "timestamp: #{block.timestamp}"
-      puts "transactions: #{block.content}"
+      puts "contents: #{block.content}"
       puts "nonce: #{block.nonce}"
       puts ""
     end

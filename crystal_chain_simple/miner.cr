@@ -1,18 +1,18 @@
 require "openssl"
 require "colorize"
 
-require "./block_chain"
+require "./chain"
 
 class Miner
   getter :name, :chain
   def initialize(@name : String)
-    @chain = BlockChain.new
+    @chain = Chain.new
   end
 
   def accept(chain)
     puts "#{@name} checks received block chain. Size: #{@chain.size}"
     if chain.size > @chain.size
-      if BlockChain.is_valid? chain
+      if Chain.is_valid? chain
         puts "#{@name} accepted received blockchain".colorize(:blue)
         @chain = chain.clone
       else
