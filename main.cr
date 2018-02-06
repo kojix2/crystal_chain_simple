@@ -4,8 +4,6 @@ require "./crystal_chain_simple/chain"
 require "./crystal_chain_simple/miner"
 
 class Main
-  @n : String?
-  @e : String?
 
   ## blockchain simulator
   @@receive_block_chain = Chain.new
@@ -13,8 +11,7 @@ class Main
   def create_miner(name, channel)
     spawn do
       miner = Miner.new name: name
-      epoch = (@e || 10).to_i
-      epoch.times do
+      @opts[:n].times do
         sleep [1, 2, 3].sample 
         miner.accept @@receive_block_chain
         miner.add_new_block("I am #{name}")
@@ -30,20 +27,25 @@ class Main
   end
 
   def initialize
+    @opts = {
+      :miner => 5,
+      :n => 3
+    }
     args = parse_options
   end
 
   private def parse_options
     OptionParser.parse! do |parser|
-      parser.on("-m NUM", "--miner=NUM", "number of miner") { |n|  @n = n }
-      parser.on("-e NUM", "--epoch", "") { |e| @e = e }
+      parser.on("-m NUM", "--miner=NUM", "number of miner") { |n|  @opts[:miner] = n.to_i }
+      parser.on("-n NUM", "--num=NUM", "loop of each miner") { |e| @opts[:n] = e.to_i }
+      parser.on("-h", "--help", "Show this help") { puts parser; exit }
     end
   end
 
   def run
     puts "start"
     ch = Channel(String).new
-    n = (@n || 3).to_i
+    n = @opts[:miner]
     n.times do |i|
       create_miner name: "mineri#{i+1}", channel: ch
     end
