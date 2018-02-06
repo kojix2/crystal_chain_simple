@@ -28,8 +28,8 @@ class Main
 
   def initialize
     @opts = {
-      :miner => 5,
-      :n => 3
+      :miner => 3,
+      :n => 5 
     }
     args = parse_options
   end
@@ -47,7 +47,7 @@ class Main
     ch = Channel(String).new
     n = @opts[:miner]
     n.times do |i|
-      create_miner name: "mineri#{i+1}", channel: ch
+      create_miner name: "miner #{i+1}", channel: ch
     end
     n.times do 
       puts ch.receive + " end"
