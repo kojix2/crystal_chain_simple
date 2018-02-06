@@ -5,7 +5,6 @@ require "./utils"
 
 class ProofOfWork
   include Hashes 
-  getter :timestamp, :content, :previous_hash
 
   def initialize(
     @timestamp : Int64,
